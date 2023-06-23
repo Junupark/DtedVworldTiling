@@ -1,0 +1,2 @@
+
+http://api.vworld.kr/req/image?service=image&request=getmap&key=02EDF83D-6E5B-3A3C-99CA-23D4ADCC0CA8&center=127,37&zoom=18&size=1000,1000&basemap=PHOTO
