@@ -4,15 +4,17 @@ function [dteds] = TileDTED(opt)
         opt.max_zoom {mustBeInteger, mustBeInRange(opt.max_zoom, 1, 18)} = 18;
         opt.left_upper_corner (2,1) = [38; 126]
         opt.right_lower_corner (2,1) = [34; 130]
+        opt.rel_path_to_database char = './DB/SRTM/Tiff'
     end
     warning off
-    addpath('../../particle filter trn/DB/SRTM/Tiff/'); % DB
+    addpath(opt.rel_path_to_database);
+%     addpath('../../particle filter trn/DB/SRTM/Tiff/'); % local
     
     corner_lat  = 33:37;
     corner_lon  = 126:129;
     n_tile_lat  = length(corner_lat);
     n_tile_lon  = length(corner_lon);
-    n_dteds     = length(corner_lat) * length(corner_lon);
+    n_dteds     = n_tile_lat * n_tile_lon;
     
     fprintf("Collecting DTEDs..\n");
     fprintf(" - progress: %s", progress());
@@ -37,7 +39,7 @@ function [dteds] = TileDTED(opt)
     fprintf("\nDone!\n\n");
     
     for zoom = opt.min_zoom:opt.max_zoom
-        fprintf("Zoom level (%d) begin!\n", zoom);
+        fprintf("Zoom level [%d] begin!\n", zoom);
         [~, x_min, y_min] = mapSlippyIndex(opt.left_upper_corner, zoom, true);
         [~, x_max, y_max] = mapSlippyIndex(opt.right_lower_corner, zoom, true);
         
@@ -82,14 +84,18 @@ function [dteds] = TileDTED(opt)
                     end
                 end
                 
+                % ver3: (TBA) advanced vectorization
+                
                 imwrite(encodeElevation(elevation_map), getSavePath('zoom', zoom, 'x', x, 'y', y, 'type', 'dted'), 'png');
             end
             fprintf("\b\b\b\b\b\b\b\b\b\b%s",progress((x-x_min+1)/(x_max-x_min+1)));
         end
-        fprintf("\nZoom level (%d) completed!\r\n", zoom);
+        fprintf("\nZoom level [%d] completed!\n\n", zoom);
     end
 end
 
+% encode terrain elevation into r-g-b according to:
+% https://docs.mapbox.com/data/tilesets/guides/access-elevation-data/#mapbox-terrain-rgb
 function rgb = encodeElevation(elevation_meter)
     e = round(10.*(elevation_meter + 1e4));
     b = mod(e, 256);
@@ -104,6 +110,7 @@ function rgb = encodeElevation(elevation_meter)
     % rgb = 0.00390625*rgb; % /256
 end
 
+% which DTED should I access to in order to correctly get terrain elevation given the position
 function [out_of_bound, idx_dted_lat, idx_dted_lon] = associateDTED(pos, corner_lat, corner_lon)
     lat = pos(1);
     lon = pos(2);
@@ -117,6 +124,7 @@ function [out_of_bound, idx_dted_lat, idx_dted_lon] = associateDTED(pos, corner_
     end
 end
 
+% which DTED should I access to in order to correctly get terrain elevations given map of positions
 function [out_of_bound, idx_dted_lat, idx_dted_lon] = associateDTEDMap(pos_map, corner_lat, corner_lon)
     lat = pos_map(:,:,1);
     lon = pos_map(:,:,2);
@@ -125,7 +133,7 @@ function [out_of_bound, idx_dted_lat, idx_dted_lon] = associateDTEDMap(pos_map, 
     idx_dted_lon = ~out_of_bound.*(floor(lon - corner_lon(1))+1);
 end
 
-
+% progress bar as a string, e.g., 20% = ">>........", 50% = ">>>>>....."
 function progress_string = progress(p)
     arguments
         p {mustBeInRange(p, 0, 1)} = 0
