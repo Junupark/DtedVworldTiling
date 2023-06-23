@@ -32,7 +32,7 @@ function [dteds] = TileDTED(opt)
                 warning("no such DTED");
             end
             dteds(idx) = dted;
-            fprintf("\n\b\b\b\b\b\b\b\b\b\b%s\n", progress(idx/n_dteds));
+            fprintf("\b\b\b\b\b\b\b\b\b\b\b%s\n", progress(idx/n_dteds));
         end
     end
     dteds = reshape(dteds, n_tile_lat, n_tile_lon);
