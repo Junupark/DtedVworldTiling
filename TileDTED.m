@@ -17,7 +17,7 @@ function [dteds] = TileDTED(opt)
     n_dteds     = n_tile_lat * n_tile_lon;
     
     fprintf("Collecting DTEDs..\n");
-    fprintf(" - progress: %s", progress());
+    fprintf(" - progress: %s\n", progress());
     idx = 0;
     for lon = corner_lon
         for lat = corner_lat
@@ -32,7 +32,7 @@ function [dteds] = TileDTED(opt)
                 warning("no such DTED");
             end
             dteds(idx) = dted;
-            fprintf("\b\b\b\b\b\b\b\b\b\b%s", progress(idx/n_dteds));
+            fprintf("\n\b\b\b\b\b\b\b\b\b\b%s\n", progress(idx/n_dteds));
         end
     end
     dteds = reshape(dteds, n_tile_lat, n_tile_lon);
@@ -44,7 +44,7 @@ function [dteds] = TileDTED(opt)
         [~, x_max, y_max] = mapSlippyIndex(opt.right_lower_corner, zoom, true);
         
         fprintf(" - x:[%d, %d], y:[%d, %d]\n", x_min, x_max, y_min, y_max);
-        fprintf(" - progress: %s", progress());
+        fprintf(" - progress: %s\n", progress());
         for x = x_min:x_max
             for y = y_min:y_max
                 pos_lu = mapSlippyIndex([x;y], zoom, false);
@@ -88,7 +88,7 @@ function [dteds] = TileDTED(opt)
                 
                 imwrite(encodeElevation(elevation_map), getSavePath('zoom', zoom, 'x', x, 'y', y, 'type', 'dted'), 'png');
             end
-            fprintf("\b\b\b\b\b\b\b\b\b\b%s",progress((x-x_min+1)/(x_max-x_min+1)));
+            fprintf("\b\b\b\b\b\b\b\b\b\b\b%s\n",progress((x-x_min+1)/(x_max-x_min+1)));
         end
         fprintf("\nZoom level [%d] completed!\n\n", zoom);
     end
