@@ -11,6 +11,8 @@ function url = getQueryURL(opt)
     if ~opt.latlon
         opt.query_pos = flip(opt.query_pos);
     end
+    height_watermark = 40;
+    opt.size(2) = opt.size(2) + 2*height_watermark;
     
     url = strcat(opt.host_url, ...
                     "&key=", opt.api_key, ...

@@ -1,4 +1,4 @@
-function TileSatImg(opt)
+function TileSatImage(opt)
     arguments
         opt.type char {mustBeMember(opt.type, {'satellite','abstract','blahblah'})} = 'satellite'
         opt.path_api_key
@@ -22,25 +22,18 @@ function TileSatImg(opt)
         [~, x_max, y_max] = mapSlippyIndex(opt.right_lower_corner, zoom, true);
         
         fprintf(" - x:[%d, %d], y:[%d, %d]\n", x_min, x_max, y_min, y_max);
-        fprintf(" - progress: %s", progress());
+        fprintf(" - progress: %s\n", progress());
         for x = x_min:x_max
             for y = y_min:y_max
                 pos_lu = mapSlippyIndex([x;y], zoom, false);
                 pos_rd = mapSlippyIndex([x+1;y+1], zoom, false);
                 query_pos = 0.5*(pos_lu + pos_rd); % may need to adjust .5 pixel
-
-                try
-                    img = webread(getQueryURL('api_key', api_key, 'type', query_type, 'query_pos', query_pos, 'zoom', zoom, 'size', [300, 300]));
-                    % some post process
-                catch
-                    img = zeros(256, 256, 3);
-                end
-
-                imwrite(img, getSavePath('zoom', zoom, 'x', x, 'y', y, 'type', opt.type), 'png');
+                query_url = getQueryURL('api_key', api_key, 'type', query_type, 'query_pos', query_pos, 'zoom', zoom);                
+                imwrite(getQueryImage(query_url), getSavePath('zoom', zoom, 'x', x, 'y', y, 'type', opt.type), 'png');
             end
-        fprintf("\b\b\b\b\b\b\b\b\b\b%s",progress((x-x_min+1)/(x_max-x_min+1)));
+        fprintf("\b\b\b\b\b\b\b\b\b\b\b%s\n",progress((x-x_min+1)/(x_max-x_min+1)));
         end
-        fprintf("\nZoom level [%d] completed!\n\n", zoom);
+        fprintf("Zoom level [%d] completed!\n\n", zoom);
     end
 end
 
