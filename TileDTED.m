@@ -36,7 +36,7 @@ function [dteds] = TileDTED(opt)
         end
     end
     dteds = reshape(dteds, n_tile_lat, n_tile_lon);
-    fprintf("\nDone!\n\n");
+    fprintf("Done!\n\n");
     
     for zoom = opt.min_zoom:opt.max_zoom
         fprintf("Zoom level [%d] begin!\n", zoom);
@@ -90,7 +90,7 @@ function [dteds] = TileDTED(opt)
             end
             fprintf("\b\b\b\b\b\b\b\b\b\b\b%s\n",progress((x-x_min+1)/(x_max-x_min+1)));
         end
-        fprintf("\nZoom level [%d] completed!\n\n", zoom);
+        fprintf("Zoom level [%d] completed!\n\n", zoom);
     end
 end
 
