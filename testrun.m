@@ -17,4 +17,8 @@ TileDTED('min_zoom', 14, 'max_zoom', 14);
 % ======================================= %
 
 % must be equipped with a personlized api key as a file, e.f., ./vworld_api_key.txt
-TileSatImage('min_zoom', 12, 'max_zoom', 12, 'path_api_key', './vworld_api_key.txt');
+% TileSatImage('min_zoom', 17, 'max_zoom', 17, 'path_api_key', './vworld_api_key.txt', ...
+%                 'left_upper_corner', [38;126.24]);
+
+
+TileSatImage('min_zoom', 18, 'max_zoom', 18, 'path_api_key', './vworld_api_key.txt');

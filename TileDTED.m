@@ -6,7 +6,7 @@ function [dteds] = TileDTED(opt)
         opt.right_lower_corner (2,1) = [34; 130]
         opt.rel_path_to_database char = './DB/SRTM/Tiff'
     end
-    warning off
+%     warning off
     addpath(opt.rel_path_to_database);
 %     addpath('../../particle filter trn/DB/SRTM/Tiff/'); % local
     
